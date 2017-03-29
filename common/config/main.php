@@ -7,4 +7,9 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
     ],
+    'modules' => [
+        'hosxp' => [
+            'class' => 'frontend\modules\hosxp\Module',
+        ],
+    ],
 ];
