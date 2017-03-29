@@ -10,10 +10,10 @@ use yii\web\Controller;
 class ReportdmController extends Controller
 {
    
-    public function actionClinicmember()
+    public function actionClinicmember($clinic=null)
     {
         
-        $sql="SELECT  c.`name` cname, COUNT(cm.hn) total,cm.refer_register_from_hospcode
+        $sql="SELECT  c.clinic,c.`name` cname, COUNT(cm.hn) total,cm.refer_register_from_hospcode
             from clinicmember cm
             JOIN clinic c on c.clinic=cm.clinic
             WHERE cm.refer_register_from_hospcode='11049'
@@ -34,18 +34,31 @@ class ReportdmController extends Controller
             'dataProvider'=>$dataProvider,
             'rawData'=>$rawData,
             'sql'=>$sql,
+            'clinic'=>$clinic
             
         ]);
     }
-    public function actionIndivclinicmember(){
+    public function actionIndivclinicmember($clinic=null){
         
+        $sql="SELECT  c.`name` cname, cm.hn 
+            from clinicmember cm
+            JOIN clinic c on c.clinic=cm.clinic
+            WHERE cm.refer_register_from_hospcode='11049'
+            AND c.hospcode='11049' and c.clinic='$clinic'";
         
-        
+        try {
+            $rawData = \Yii::$app->db2->createCommand($sql)->queryAll();
+        } catch (\yii\db\Exception $e) {
+            throw new \yii\web\ConflictHttpException('sql error');
+        }
+        $dataProvider = new \yii\data\ArrayDataProvider([
+            'allModels'=>$rawData           
+        ]);
         return $this->render('indivclinicmember',[
             'dataProvider'=>$dataProvider,
             'rawData'=>$rawData,
             'sql'=>$sql,
-            
+            'clinic'=>$clinic
         ]);
     }
 }

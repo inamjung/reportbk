@@ -1,19 +1,34 @@
 <?php
 
-use yii\grid\GridView;
+use kartik\grid\GridView;
+use yii\helpers\Html;
 
 ?>
 
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     //'filterModel' => $searchModel,
+    'hover'=>true,
+    'striped'=>false,
     'columns' => [
         ['class' => 'yii\grid\SerialColumn'],
         
         'cname',
-        'total',        
+       
+        [
+            'attribute'=>'total',
+            'format'=>'raw',
+            'value'=> function($model)use($clinic) {
+                return Html::a(Html::encode($model['total']), [
+                'reportdm/indivclinicmember', 
+                    'clinic'=>$model['clinic']
+                
+                    ]
+    );
+            }
+        ],
         
-        ['class' => 'yii\grid\ActionColumn'],
+        //['class' => 'yii\grid\ActionColumn'],
     ],
 ]);
 ?> 
